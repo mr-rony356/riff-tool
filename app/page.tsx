@@ -22,12 +22,19 @@ const Home: React.FC = () => {
       if (parsedUrl.hostname === "youtu.be") {
         id = parsedUrl.pathname.substring(1); // Remove leading slash
       }
-      // Check for YouTube regular URL
+      // Check for YouTube regular URL with video ID in query parameters
       else if (
         parsedUrl.hostname === "www.youtube.com" &&
         parsedUrl.searchParams.has("v")
       ) {
         id = parsedUrl.searchParams.get("v");
+      }
+      // Check for YouTube live URL with video ID in the path
+      else if (
+        parsedUrl.hostname === "www.youtube.com" &&
+        parsedUrl.pathname.startsWith("/live/")
+      ) {
+        id = parsedUrl.pathname.split("/live/")[1];
       }
 
       if (id) {
