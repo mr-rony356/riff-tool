@@ -14,17 +14,37 @@ const Home: React.FC = () => {
   const [playbackRate, setPlaybackRate] = useState<number>(1);
 
   const handleSearch = (url: string) => {
-    const id = new URL(url).searchParams.get("v");
-    if (id) {
-      setVideoId(id);
+    try {
+      const parsedUrl = new URL(url);
+      let id: string | null = null;
+
+      // Check for YouTube short URL
+      if (parsedUrl.hostname === "youtu.be") {
+        id = parsedUrl.pathname.substring(1); // Remove leading slash
+      }
+      // Check for YouTube regular URL
+      else if (
+        parsedUrl.hostname === "www.youtube.com" &&
+        parsedUrl.searchParams.has("v")
+      ) {
+        id = parsedUrl.searchParams.get("v");
+      }
+
+      if (id) {
+        setVideoId(id);
+      } else {
+        console.error("Invalid YouTube URL format.");
+      }
+    } catch (error) {
+      console.error("Error parsing URL:", error);
     }
   };
   console.log(videoId);
 
   return (
-    <div className="container mx-auto p-4 flex flex-col items-center ">
+    <div className="container mx-auto md:p-4 p-2 flex flex-col items-center ">
       <Header />
-      <div className="max-w-[690px] mx-auto w-full">
+      <div className="md:max-w-[690px] mx-auto w-full">
         <SearchBar onSearch={handleSearch} />
         <YouTubePlayer
           videoId={videoId || ""}
@@ -37,7 +57,6 @@ const Home: React.FC = () => {
         />
         <SavedLoops />
         <InfoSections />
-
       </div>
     </div>
   );

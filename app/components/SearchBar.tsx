@@ -4,10 +4,6 @@ interface SearchBarProps {
   onSearch: (url: string) => void;
 }
 
-const isValidYouTubeUrl = (url: string): boolean => {
-  const pattern = /^(https?:\/\/)?(www\.)?(youtube\.com\/(?:embed\/|v\/|watch\?v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})$/;
-  return pattern.test(url);
-};
 
 const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   const [url, setUrl] = useState("");
@@ -16,12 +12,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (url.trim()) {
-        if (isValidYouTubeUrl(url)) {
-          setError(null);
           onSearch(url);
-        } else {
-          setError("Please enter a valid YouTube URL.");
-        }
       }
     }, 500);
 
@@ -66,7 +57,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           placeholder="Paste YouTube URL here"
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          className="w-full p-2 pl-16 border rounded-md text-gray-900 border-gray-300 focus:ring focus:border-blue-300 text-2xl"
+          className="w-full p-2 md:pl-16 pl-12 border rounded-md text-gray-900 border-gray-300 focus:ring focus:border-blue-300 text-lg md:text-2xl"
         />
       </div>
       {error && <div className="text-red-500 mt-2">{error}</div>}

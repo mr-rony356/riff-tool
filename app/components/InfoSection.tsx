@@ -77,40 +77,6 @@ const InfoSections = () => {
         }
       />
 
-      <InfoSection
-        title="3 Stellar Reasons why you should sign up for premium now"
-        content={
-          <div>
-            <p>
-              1. Save your loops so you can pick up from where you left off.
-              Sometimes I get interrupted and need to come back to the loop so
-              this helps.
-            </p>
-            <p>
-              <em>
-                *Keep in mind. Songs that you save on your desktop/laptop
-                computer won’t transfer when you log-in on your phone and vice
-                versa.*
-              </em>
-            </p>
-            <p>
-              2. Simply bump up or back up the loop section by one second with a
-              click of a button to seamlessly move throughout a song.
-            </p>
-            <p>
-              3. Have fun figuring out more riffs while at the same time
-              improving your playing!
-            </p>
-            <p>
-              Click{" "}
-              <a href="#" className="text-blue-500 underline">
-                here
-              </a>{" "}
-              to become a premium member :)
-            </p>
-          </div>
-        }
-      />
 
       <InfoSection
         title="About founder"

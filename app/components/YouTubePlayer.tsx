@@ -74,8 +74,15 @@ const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
   };
 
   return (
-    <div className="mt-12 w-full flex flex-col items-center border-2 border-gray-200 p-6 shadow-md">
-      <div id="youtube-player" className={videoId?'block bg-[#EEEEEE] w-full h-[350px]':'hidden'}></div>
+    <div className="mt-12 w-full flex flex-col items-center border-2 border-gray-200 md:p-6  p-2 shadow-md">
+      <div
+        id="youtube-player"
+        className={
+          videoId
+            ? "block bg-[#EEEEEE] w-full md:h-[350px] h-[230px]"
+            : "hidden"
+        }
+      ></div>
       {videoId ? (
         <ControlPanel
           startAt={startAt}
@@ -88,7 +95,7 @@ const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
           isPlaying={isPlaying}
         />
       ) : (
-        <div className="h-[50vh]  bg-[#EEEEEE] flex items-center justify-center w-full text-center text-gray-700 font-semibold">
+        <div className="md:h-[50vh]  h-[250px] bg-[#EEEEEE] flex items-center justify-center w-full text-center text-gray-700 font-semibold">
           <p className="text-2xl">
             Video is not loaded <br />
             Please, paste a URL above
