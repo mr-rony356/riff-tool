@@ -1,5 +1,6 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
+import { Toaster, toast } from 'react-hot-toast';
 import SearchBar from "./components/SearchBar";
 import YouTubePlayer from "./components/YouTubePlayer";
 import Header from "./components/Header";
@@ -48,8 +49,21 @@ const Home: React.FC = () => {
   };
   console.log(videoId);
 
+  const handleSaveLoop = useCallback(() => {
+    toast.success('Loop saved successfully!');
+  }, []);
+
+  const handleLoadLoop = useCallback((loop: any) => {
+    setVideoId(loop.videoId);
+    setStartAt(loop.startAt);
+    setEndAt(loop.endAt);
+    setPlaybackRate(loop.playbackRate);
+    toast.success('Loop loaded successfully!');
+  }, []);
+
   return (
     <div className="container mx-auto md:p-4 p-2 flex flex-col items-center ">
+      <Toaster position="top-right" />
       <Header />
       <div className="md:max-w-[690px] mx-auto w-full">
         <SearchBar onSearch={handleSearch} />
@@ -61,8 +75,9 @@ const Home: React.FC = () => {
           onStartAtChange={setStartAt}
           onEndAtChange={setEndAt}
           onPlaybackRateChange={setPlaybackRate}
+          onSaveLoop={handleSaveLoop}
         />
-        <SavedLoops />
+        <SavedLoops onLoadLoop={handleLoadLoop} />
         <InfoSections />
       </div>
     </div>

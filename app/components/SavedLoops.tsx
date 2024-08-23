@@ -1,9 +1,77 @@
-export default function SavedLoops() {
-    return (
-      <div className="mt-8 p-4 border-spacing-10 border-2 border-gray-200 shadow-md text-black">
-        <h2 className="text-2xl font-semibold">Saved loops</h2>
-        {/* Add your loops list here */}
-      </div>
-    );
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../lib/supabaseClient';
+import { toast } from 'react-hot-toast';
+
+interface Loop {
+  id: number;
+  videoId: string;
+  startAt: number;
+  endAt: number;
+  playbackRate: number;
+  title: string;
+}
+
+interface SavedLoopsProps {
+  onLoadLoop: (loop: Loop) => void;
+}
+
+export default function SavedLoops({ onLoadLoop }: SavedLoopsProps) {
+  const [loops, setLoops] = useState<Loop[]>([]);
+
+  useEffect(() => {
+    fetchLoops();
+  }, []);
+
+  async function fetchLoops() {
+    const { data, error } = await supabase
+      .from('loops')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching loops:', error);
+    } else {
+      setLoops(data || []);
+    }
   }
-  
+
+  async function deleteLoop(id: number) {
+    const { error } = await supabase
+      .from('loops')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      toast.error('Error deleting loop');
+      console.error('Error deleting loop:', error);
+    } else {
+      fetchLoops();
+      toast.success('Loop deleted successfully');
+    }
+  }
+
+  return (
+    <div className="mt-8 p-4 border-spacing-10 border-2 border-gray-200 shadow-md text-black">
+      <h2 className="text-2xl font-semibold mb-4">Saved loops</h2>
+      {loops.map((loop) => (
+        <div key={loop.id} className="flex justify-between items-center mb-2 p-2 bg-gray-100 rounded">
+          <span>{loop.title}</span>
+          <div>
+            <button
+              onClick={() => onLoadLoop(loop)}
+              className="bg-blue-500 text-white px-2 py-1 rounded mr-2"
+            >
+              Load
+            </button>
+            <button
+              onClick={() => deleteLoop(loop.id)}
+              className="bg-red-500 text-white px-2 py-1 rounded"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}

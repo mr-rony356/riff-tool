@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { FaPlay, FaPause, FaBackward } from "react-icons/fa";
+import { toast } from 'react-hot-toast';
 import { IoIosArrowDown, IoMdPause, IoMdPlay } from "react-icons/io";
 import { GrPlayFill } from "react-icons/gr";
 import { IoPlaySkipBackSharp } from "react-icons/io5";
+import { supabase } from "../lib/supabaseClient";
+
 interface ControlPanelProps {
   startAt: number;
   endAt: number;
@@ -12,6 +14,8 @@ interface ControlPanelProps {
   onPlaybackRateChange: (value: number) => void;
   onPlayPause: () => void;
   isPlaying: boolean;
+  videoId: string;
+  onSaveLoop: () => void;
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -23,8 +27,11 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   onPlaybackRateChange,
   onPlayPause,
   isPlaying,
+  videoId,
+  onSaveLoop,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [loopTitle, setLoopTitle] = useState("");
 
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
@@ -55,6 +62,32 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       } else {
         onEndAtChange(Math.floor(endAt / 60) * 60 + sec);
       }
+    }
+  };
+
+  const handleSaveLoop = async () => {
+    if (!loopTitle) {
+      toast.error('Please enter a title for your loop');
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from('loops')
+      .insert({
+        videoId,
+        startAt,
+        endAt,
+        playbackRate,
+        title: loopTitle,
+      });
+
+    if (error) {
+      toast.error('Error saving loop');
+      console.error('Error saving loop:', error);
+    } else {
+      setLoopTitle('');
+      onSaveLoop();
+      toast.success('Loop saved successfully!');
     }
   };
 
@@ -169,6 +202,21 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             </div>
           )}
         </div>
+      </div>
+      <div className="flex space-x-2 items-center">
+        <input
+          type="text"
+          value={loopTitle}
+          onChange={(e) => setLoopTitle(e.target.value)}
+          placeholder="Loop title"
+          className="px-2 py-1 border rounded"
+        />
+        <button
+          onClick={handleSaveLoop}
+          className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+        >
+          Save Loop
+        </button>
       </div>
     </div>
   );

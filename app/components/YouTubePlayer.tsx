@@ -11,6 +11,7 @@ interface YouTubePlayerProps {
   onStartAtChange: (value: number) => void;
   onEndAtChange: (value: number) => void;
   onPlaybackRateChange: (value: number) => void;
+  onSaveLoop: () => void;
 }
 
 const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
@@ -21,6 +22,7 @@ const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
   onStartAtChange,
   onEndAtChange,
   onPlaybackRateChange,
+  onSaveLoop,
 }) => {
   const playerRef = useRef<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -85,6 +87,7 @@ const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
       ></div>
       {videoId ? (
         <ControlPanel
+          videoId={videoId}
           startAt={startAt}
           endAt={endAt}
           playbackRate={playbackRate}
@@ -93,6 +96,7 @@ const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
           onPlaybackRateChange={onPlaybackRateChange}
           onPlayPause={handlePlayPause}
           isPlaying={isPlaying}
+          onSaveLoop={onSaveLoop}
         />
       ) : (
         <div className="md:h-[50vh]  h-[250px] bg-[#EEEEEE] flex items-center justify-center w-full text-center text-gray-700 font-semibold">
@@ -105,5 +109,4 @@ const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
     </div>
   );
 };
-
 export default YouTubePlayerComponent;
