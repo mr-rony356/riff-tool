@@ -1,18 +1,32 @@
 "use client";
-import React, { useState, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from 'react';
 import { Toaster, toast } from 'react-hot-toast';
 import SearchBar from "./components/SearchBar";
 import YouTubePlayer from "./components/YouTubePlayer";
 import Header from "./components/Header";
-import InfoSections from "./components/InfoSection";
 import Footer from "./components/Footer";
 import SavedLoops from "./components/SavedLoops";
+import { supabase } from './lib/supabaseClient';
+import { User } from '@supabase/supabase-js';
+import AuthButton from './components/AuthButton';
+import InfoSections from './components/InfoSection';
 
 const Home: React.FC = () => {
   const [videoId, setVideoId] = useState<string | null>(null);
   const [startAt, setStartAt] = useState<number>(0);
   const [endAt, setEndAt] = useState<number>(0);
   const [playbackRate, setPlaybackRate] = useState<number>(1);
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    };
+  }, []);
 
   const handleSearch = (url: string) => {
     try {
@@ -76,12 +90,12 @@ const Home: React.FC = () => {
           onEndAtChange={setEndAt}
           onPlaybackRateChange={setPlaybackRate}
           onSaveLoop={handleSaveLoop}
+          user={user}
         />
-        <SavedLoops onLoadLoop={handleLoadLoop} />
+        <SavedLoops onLoadLoop={handleLoadLoop} user={user} />
         <InfoSections />
       </div>
     </div>
   );
 };
-
 export default Home;

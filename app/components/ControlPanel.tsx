@@ -4,6 +4,7 @@ import { IoIosArrowDown, IoMdPause, IoMdPlay } from "react-icons/io";
 import { GrPlayFill } from "react-icons/gr";
 import { IoPlaySkipBackSharp } from "react-icons/io5";
 import { supabase } from "../lib/supabaseClient";
+import { User } from '@supabase/supabase-js';
 
 interface ControlPanelProps {
   startAt: number;
@@ -16,6 +17,7 @@ interface ControlPanelProps {
   isPlaying: boolean;
   videoId: string;
   onSaveLoop: () => void;
+  user: User | null;
 }
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -29,6 +31,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   isPlaying,
   videoId,
   onSaveLoop,
+  user,
 }) => {
   const [showDropdown, setShowDropdown] = useState(false);
   const [loopTitle, setLoopTitle] = useState("");
@@ -71,6 +74,11 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       return;
     }
 
+    if (!user) {
+      toast.error('Please sign in to save loops');
+      return;
+    }
+
     const { data, error } = await supabase
       .from('loops')
       .insert({
@@ -79,6 +87,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         endAt,
         playbackRate,
         title: loopTitle,
+        user_id: user.id,
       });
 
     if (error) {

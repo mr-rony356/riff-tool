@@ -1,7 +1,8 @@
 // components/YouTubePlayer.tsx
-import React, { useEffect, useRef, useState } from "react";
+import React, { use, useEffect, useRef, useState } from "react";
 import YouTubePlayer from "youtube-player";
 import ControlPanel from "./ControlPanel"; // Ensure ControlPanel is imported
+import { User } from "@supabase/supabase-js";
 
 interface YouTubePlayerProps {
   videoId: string;
@@ -12,6 +13,7 @@ interface YouTubePlayerProps {
   onEndAtChange: (value: number) => void;
   onPlaybackRateChange: (value: number) => void;
   onSaveLoop: () => void;
+  user: User | null;
 }
 
 const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
@@ -23,6 +25,7 @@ const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
   onEndAtChange,
   onPlaybackRateChange,
   onSaveLoop,
+  user
 }) => {
   const playerRef = useRef<any>(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -97,6 +100,7 @@ const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
           onPlayPause={handlePlayPause}
           isPlaying={isPlaying}
           onSaveLoop={onSaveLoop}
+          user={user}
         />
       ) : (
         <div className="md:h-[50vh]  h-[250px] bg-[#EEEEEE] flex items-center justify-center w-full text-center text-gray-700 font-semibold">
@@ -108,5 +112,4 @@ const YouTubePlayerComponent: React.FC<YouTubePlayerProps> = ({
       )}
     </div>
   );
-};
-export default YouTubePlayerComponent;
+};export default YouTubePlayerComponent;

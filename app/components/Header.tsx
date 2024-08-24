@@ -1,8 +1,10 @@
 import Image from "next/image";
+import AuthButton from "./AuthButton";
 
 export default function Header() {
   return (
     <header className="py-4  mb-4 text-center flex justify-center items-center flex-col">
+
       <div>
         <Image src="/logo.png" alt="Logo" width={170} height={170} />
       </div>
@@ -10,6 +12,7 @@ export default function Header() {
         Slow down and loop specific guitar parts from YouTube <br />
         videos so you can easily figure them out.{" "}
       </p>
+      <AuthButton />
     </header>
   );
 }
