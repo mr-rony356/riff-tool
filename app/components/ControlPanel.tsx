@@ -102,7 +102,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
   return (
     <div className="flex flex-col items-center md:space-y-4 space-y-1 mt-4 text-black justify-between w-full pb-4 md:pb-0">
-      <div className="flex space-x-2 justify-between w-full font-semibold text-xl">
+      <div className="flex space-x-2 justify-between w-full font-semibold  text-base md:text-xl">
         <div>
           <label>Starts at:</label>
           <div className="flex  mt-2 flex-col  md:flex-row gap-1 justify-center items-start md:items-center">
@@ -212,13 +212,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           )}
         </div>
       </div>
-      <div className="flex space-x-2 items-center">
+      <div className="flex !mt-6  items-center justify-between w-full ">
         <input
           type="text"
           value={loopTitle}
           onChange={(e) => setLoopTitle(e.target.value)}
           placeholder="Loop title"
-          className="px-2 py-1 border rounded"
+          className="px-2 py-1 border w-1/2 rounded"
         />
         <button
           onClick={handleSaveLoop}
